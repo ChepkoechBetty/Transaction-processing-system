@@ -71,21 +71,18 @@
       "type": "docker-run",
       "label": "docker-run: debug",
       "dependsOn": ["docker-build: debug"],
-      "dockerRun": {
-        "os": "Windows"
-      },
+      "dockerRun": {},
       "netCore": {
         "appProject": "${workspaceFolder}/TPS.csproj",
-        "enableDebugging": true
+        "enableDebugging": true,
+        "configureSsl": false
       }
     },
     {
       "type": "docker-run",
       "label": "docker-run: release",
       "dependsOn": ["docker-build: release"],
-      "dockerRun": {
-        "os": "Windows"
-      },
+      "dockerRun": {},
       "netCore": {
         "appProject": "${workspaceFolder}/TPS.csproj"
       }
