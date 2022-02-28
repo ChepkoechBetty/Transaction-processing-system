@@ -72,7 +72,7 @@ namespace TPS
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors(options => options
-                .WithOrigins(new[] { "http://localhost:3000", "http://localhost:8080", "http://localhost:4200" })
+                .WithOrigins(new[] { "http://localhost:3000", "http://localhost:8080", "http://localhost:4200", "https://tps-frontend.herokuapp.com" })
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
