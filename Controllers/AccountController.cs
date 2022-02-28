@@ -74,23 +74,5 @@ namespace TPS.Controllers
                 return Unauthorized();
             }
         }
-        public TUser GetCurrentUser()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-            if (identity != null)
-            {
-                var userClaims = identity.Claims;
-
-                return new TUser
-                {
-                    Id= userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
-                    UserName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Surname)?.Value,
-                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
-                    Name = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.GivenName)?.Value,
-                };
-            }
-            return null;
-        }
     }
 }

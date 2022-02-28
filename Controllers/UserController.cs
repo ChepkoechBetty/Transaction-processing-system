@@ -35,11 +35,16 @@ namespace TPS.Controllers
         {
             var user = _iUserService.GetByUsername(authenticate.Username);
             if (user == null) return BadRequest(new { message = "Invalid Credentials" });
-
-            if (authenticate.Password!=user.Password)
+            var password = BCrypt.Net.BCrypt.HashPassword(authenticate.Password);
+            if (!BCrypt.Net.BCrypt.Verify(authenticate.Password, user.Password))
             {
                 return BadRequest(new { message = "Invalid Credentials" });
             }
+
+            //if (authenticate.Password!=user.Password)
+            //{
+            //    return BadRequest(new { message = "Invalid Credentials" });
+            //}
             var jwt = _jwtService.Generate(user.Id);
 
             Response.Cookies.Append("jwt", jwt, new CookieOptions
@@ -58,15 +63,15 @@ namespace TPS.Controllers
         {
             try
             {
-                var jwt = Request.Cookies["jwt"];
-
-                var token = _jwtService.Verify(jwt);
-
-                string userId =token.Issuer;
+                var userId = GetUserId();
 
                 var useraccount = _iUserService.GetAccount(userId);
+                if (useraccount != null)
+                {
 
-                return Ok(useraccount);
+                    return Ok(useraccount);
+                }
+                return Ok("you do not have an account");
             }
             catch (Exception)
             {
@@ -82,6 +87,15 @@ namespace TPS.Controllers
             {
                 message = "success"
             });
+        }
+        public string GetUserId()
+        {
+            var jwt = Request.Cookies["jwt"];
+
+            var token = _jwtService.Verify(jwt);
+
+            string userId = token.Issuer;
+            return userId;
         }
     }
 }
