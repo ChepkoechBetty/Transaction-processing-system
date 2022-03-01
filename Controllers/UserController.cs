@@ -45,7 +45,8 @@ namespace TPS.Controllers
 
             Response.Cookies.Append("jwt", jwt, new CookieOptions
             {
-                Secure = true
+                Secure = true,
+                SameSite = SameSiteMode.None
             });
             return Ok(user);
 
