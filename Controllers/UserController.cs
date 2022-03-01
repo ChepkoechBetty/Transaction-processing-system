@@ -34,28 +34,25 @@ namespace TPS.Controllers
         public IActionResult Login([FromBody] Authenticate authenticate)
         {
             var user = _iUserService.GetByUsername(authenticate.Username);
-            if (user == null) return BadRequest(new { message = "Invalid Credentials" });
-            var password = BCrypt.Net.BCrypt.HashPassword(authenticate.Password);
-            if (!BCrypt.Net.BCrypt.Verify(authenticate.Password, user.Password))
-            {
-                return BadRequest(new { message = "Invalid Credentials" });
-            }
+            if (user == null) return BadRequest("Invalid credentials");
 
-            //if (authenticate.Password!=user.Password)
-            //{
-            //    return BadRequest(new { message = "Invalid Credentials" });
-            //}
+                //var password = BCrypt.Net.BCrypt.HashPassword(authenticate.Password);
+                if (!BCrypt.Net.BCrypt.Verify(authenticate.Password, user.Password))
+                {
+                    return BadRequest(new { message="Invalid crdentials" });
+                }
             var jwt = _jwtService.Generate(user.Id);
 
             Response.Cookies.Append("jwt", jwt, new CookieOptions
             {
                 HttpOnly = true
             });
+            return Ok(user);
 
-            return Ok(new
-            {
-                message = "success"
-            });
+            //return Ok(new
+            //{
+            //    message = "success"
+            //});
 
         }
         [HttpGet("account")]
