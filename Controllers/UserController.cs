@@ -34,7 +34,7 @@ namespace TPS.Controllers
         public IActionResult Login([FromBody] Authenticate authenticate)
         {
             var user = _iUserService.GetByUsername(authenticate.Username);
-            if (user == null) return BadRequest("Invalid credentials");
+            if (user == null) return BadRequest(new { message = "Invalid crdentials" });
 
                 //var password = BCrypt.Net.BCrypt.HashPassword(authenticate.Password);
                 if (!BCrypt.Net.BCrypt.Verify(authenticate.Password, user.Password))
@@ -45,7 +45,7 @@ namespace TPS.Controllers
 
             Response.Cookies.Append("jwt", jwt, new CookieOptions
             {
-                HttpOnly = true
+                Secure = true
             });
             return Ok(user);
 
